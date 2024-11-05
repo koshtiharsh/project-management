@@ -1,7 +1,7 @@
-client/node_modules
+frontend/node_modules
 server/node_modules
-client/dist/
-client/.env
+frontend/dist/
+frontend/.env
 server/.env
-client/.next/
+frontend/.next/
 codebyed-roh
