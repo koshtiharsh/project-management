@@ -3,7 +3,7 @@ import Navbar from "@/(components)/Navbar"
 import Sidebar from "@/(components)/Sidebar"
 import StoreProvider, { useAppSelector } from "./redux"
 import { useEffect } from "react"
-
+import AuthProvider from './authProvider'
 
 
 export function DashboardWrapperLayout({ children }: { children: React.ReactNode }) {
@@ -26,7 +26,7 @@ export function DashboardWrapperLayout({ children }: { children: React.ReactNode
         <div className="flex min-h-screen w-full bg-gray-50 text-gray-900">
             {/* sidebar  */}
             <Sidebar />
-            <main className={`flex  w-full flex-col bg-gray-50  dark:bg-dark-bg ${isSidebar ?'': 'md:pl-64'}`}>
+            <main className={`flex  w-full flex-col bg-gray-50  dark:bg-dark-bg ${isSidebar ? '' : 'md:pl-64'}`}>
                 {/* navbar */}
                 <Navbar />
 
@@ -41,9 +41,12 @@ export function DashboardWrapperLayout({ children }: { children: React.ReactNode
 export default function DashboardWrapper({ children }: { children: React.ReactNode }) {
     return (
         <StoreProvider>
-            <DashboardWrapperLayout>
-                {children}
-            </DashboardWrapperLayout>
+            <AuthProvider >
+                <DashboardWrapperLayout>
+                    {children}
+                </DashboardWrapperLayout>
+            </AuthProvider>
+
         </StoreProvider>
     )
 };
