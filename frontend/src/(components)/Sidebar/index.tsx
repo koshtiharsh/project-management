@@ -1,15 +1,15 @@
 'use client'
-import Home from "@/app/page"
+
 import { useAppDispatch, useAppSelector } from "@/app/redux"
 import { setIsSidebarCollapsed } from "@/state"
-import { useGetProjectsQuery } from "@/state/api"
+import { Project, useGetProjectsQuery } from "@/state/api"
 import { AlertCircle, AlertOctagon, AlertTriangle, Briefcase, ChevronDown, ChevronUp, HomeIcon, Icon, Layers3, LockIcon, LucideHome, LucideIcon, Menu, Search, Settings, ShieldAlert, User, UsersIcon, X } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { useParams, usePathname } from "next/navigation"
-import { hostname } from "os"
+import {  usePathname } from "next/navigation"
+
 import { useState } from "react"
-import { isatty } from "tty"
+
 
 
 export default function Sidebar() {
@@ -78,7 +78,7 @@ export default function Sidebar() {
                 </button>
 
                 {/* project list */}
-                {showProjects && projects?.map((project: any) => (
+                {showProjects && projects?.map((project:Project) => (
                     <SidebarLink key={project.id} icon={Briefcase} label={project.name} href={`/projects/${project.id}`} />
                 ))}
 

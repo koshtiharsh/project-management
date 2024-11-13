@@ -26,9 +26,9 @@ const taskColumns: GridColDef[] = [
     { field: "dueDate", headerName: "Due Date", width: 150 },
 ];
 
-type Props = {}
+
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
-export default function HomePage({ }: Props) {
+export default function HomePage() {
     const { data: tasks, isLoading: taskLoading, isError: taskError } = useGetTasksQuery({ projectId: 1 })
 
     const { data: projects, isLoading: isProjectLoading } = useGetProjectsQuery();

@@ -1,9 +1,9 @@
 import { Priority } from "@/state/api"
 import ReusablePriorityPage from "../reusablePriorityPage"
 
-type Props = {}
 
-export default function page({}: Props) {
+
+export default function page() {
   return (
     <ReusablePriorityPage priority={Priority.Urgent} />
   )

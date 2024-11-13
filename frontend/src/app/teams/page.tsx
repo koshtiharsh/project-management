@@ -26,7 +26,7 @@ const columns: GridColDef[] = [
 
 
 
-export default function page() {
+export default function Page() {
 
     const { data: teams, isLoading, isError } = useGetTeamsQuery()
 

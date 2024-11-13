@@ -7,10 +7,10 @@ import { DataGrid, GridColDef, GridToolbarContainer, GridToolbarExport, GridTool
 import Image from "next/image"
 import { dataGridClassNames, dataGridSxStyles } from "../lib/utils"
 
-const CustomToolbar =()=>(
+const CustomToolbar = () => (
     <GridToolbarContainer className="toolbar flex gap-2" >
-        <GridToolbarFilterButton/>
-        <GridToolbarExport/>
+        <GridToolbarFilterButton />
+        <GridToolbarExport />
     </GridToolbarContainer>
 )
 
@@ -34,7 +34,7 @@ const columns: GridColDef[] = [
 
 
 
-export default function page() {
+export default function Page() {
 
     const { data: users, isLoading, isError } = useGetUsersQuery()
 
@@ -49,12 +49,12 @@ export default function page() {
                 <DataGrid
                     rows={users || []}
                     columns={columns}
-                    getRowId={(row)=>row.userId}
+                    getRowId={(row) => row.userId}
                     pagination
                     className={dataGridClassNames}
-                    sx = {dataGridSxStyles(isDarkMode)}
-                    slots ={{
-                        toolbar:CustomToolbar
+                    sx={dataGridSxStyles(isDarkMode)}
+                    slots={{
+                        toolbar: CustomToolbar
                     }}
                 />
             </div>
