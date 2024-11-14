@@ -87,8 +87,9 @@ export const api = createApi({
         prepareHeaders: async (headers) => {
             const session = await fetchAuthSession()
             const { accessToken } = session.tokens ?? {}
+            // console.log(accessToken)
             if (accessToken) {
-                headers.set('Authotization', `Bearer ${accessToken}`)
+                headers.set('Authorization', `Bearer ${accessToken}`)
             }
             return headers
         }
