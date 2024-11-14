@@ -40,7 +40,7 @@ const formFields = {
 };
 export default function authProvider({children}:any) {
   return (
-    <div className="mt-5">
+    <div >
         <Authenticator formFields={formFields}>
         {({user})=>
             user? (

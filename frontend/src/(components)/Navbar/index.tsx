@@ -13,17 +13,18 @@ export default function Navbar() {
     const isSidebar = useAppSelector((state) => state.global.isSidbarCollapse)
     const isDarkMode = useAppSelector((state) => state.global.isDarkMode)
 
-    const {data:currentUser} = useGetAuthUserQuery({});
-    const handleSignOut = async ()=>{
-        try{
+    const { data: currentUser } = useGetAuthUserQuery({});
+
+    const handleSignOut = async () => {
+        try {
             await signOut()
 
-        }catch(e){
-            console.log('error sign in out ',e)
+        } catch (e) {
+            console.log('error sign in out ', e)
         }
     }
 
-    if(!currentUser) return null;
+    if (!currentUser) return null;
     const currentUserDetails = currentUser?.userDetails;
 
     return (
@@ -64,19 +65,19 @@ export default function Navbar() {
 
                 <div className="hidden items-center justify-between md:flex ">
                     <div className='align-center flex h-9 w-9 justify-center'>
-                        {!!currentUserDetails?.profilePictureUrl? (
-                             <Image
-                             src={`/${currentUserDetails.profilePictureUrl}}`}
-                             alt="error image"
-                             width={400}
-                             height={200}
-                             className='h-auto w-full rounded-full  object-cover'
-                         />
-                        ):(
+                        {!!currentUserDetails?.profilePictureUrl ? (
+                            <Image
+                                src={`/${currentUserDetails.profilePictureUrl}}`}
+                                alt="error image"
+                                width={400}
+                                height={200}
+                                className='h-auto w-full rounded-full  object-cover'
+                            />
+                        ) : (
                             <User className='h-6 w-6 cursor-pointer self-center rounded-full dark:text-white' />
                         )}
 
-                        <span className='mx-3 text-gray-800 dark:text-white' > 
+                        <span className='mx-3 text-gray-800 dark:text-white' >
                             {currentUserDetails?.username}
                         </span>
                         <button onClick={handleSignOut} className='hidden rounded bg-blue-400 px-4 py-2 font-bold text-white hover:bg-blue-500 md:block'>signOut</button>
