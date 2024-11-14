@@ -1,4 +1,5 @@
 import { createApi, CreateApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth";
 
 export interface Project {
     id: number;
@@ -67,9 +68,9 @@ export interface SearchResults {
     tasks?: Task[];
     projects?: Project[];
     users?: User[];
-  }
+}
 
-export interface Team{
+export interface Team {
     id: number;
     teamName: string;
     productOwnerUserId: number;
@@ -77,13 +78,49 @@ export interface Team{
     productOwnerUserName: string;
     projectManagerUsername: string;
 }
-  
+
 export const api = createApi({
-    baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_API_URL }),
+    baseQuery: fetchBaseQuery({
+
+        baseUrl: process.env.NEXT_PUBLIC_API_URL,
+
+        prepareHeaders: async (headers) => {
+            const session = await fetchAuthSession()
+            const { accessToken } = session.tokens ?? {}
+            if (accessToken) {
+                headers.set('Authotization', `Bearer ${accessToken}`)
+            }
+            return headers
+        }
+    }),
     reducerPath: 'api',
-    tagTypes: ['Projects', 'Tasks','Users',"Teams"],
+    tagTypes: ['Projects', 'Tasks', 'Users', "Teams"],
     endpoints: (build) => ({
 
+        getAuthUser: build.query({
+            queryFn: async (_, _queryApi, _extraoptions, fetchWithBQ) => {
+                try {
+
+                    // bassically we are taking cognito id from aws 
+                    const user = await getCurrentUser();
+                    const session = await fetchAuthSession()
+
+                    if (!session) throw new Error('nosesstion found')
+
+                    const { userSub } = session;
+                    const { accessToken } = session.tokens ?? {};
+
+                    // using that id go get data from db
+                    const userDetailsResponse = await fetchWithBQ(`users/${userSub}`)
+                    const userDetails = userDetailsResponse.data as User;
+                    return { data: { user, userSub, userDetails } }
+
+                } catch (error: any) {
+                    return { error: error.message || " couldnt fetch user data" }
+                }
+            }
+        })
+        ,
 
         // "first will the return type of data , second is type of data we are passing"
         getProjects: build.query<Project[], void>({
@@ -131,20 +168,20 @@ export const api = createApi({
             ],
         }),
 
-        search :build.query<SearchResults, string>({
-            query:(query)=>`/search?query=${query}`,
+        search: build.query<SearchResults, string>({
+            query: (query) => `/search?query=${query}`,
 
         }),
         getUsers: build.query<User[], void>({
             query: () => 'users',
             providesTags: ['Users'],
         }),
-        
+
         getTeams: build.query<Team[], void>({
             query: () => 'teams',
             providesTags: ['Teams'],
         }),
-        
+
         getTasksByUserId: build.query<Task[], number>({
             query: (userId) => `tasks/user/${userId}`,
             providesTags: (result, error, userId) =>
@@ -152,6 +189,8 @@ export const api = createApi({
                     ? result.map(({ id }) => ({ type: 'Tasks', id })) // Cache each task by its ID
                     : [{ type: 'Tasks' }], // If no result, still provide the 'Tasks' tag
         }),
+
+
 
     }),
 });
@@ -163,9 +202,10 @@ export const {
     useCreateProjectMutation,  // Hook for creating a project
     useGetTasksQuery,          // Hook for getting tasks
     useCreateTaskMutation,
-    useUpdateTaskStatusMutation , // Hook for creating a task,
+    useUpdateTaskStatusMutation, // Hook for creating a task,
     useSearchQuery,
     useGetUsersQuery,
     useGetTeamsQuery,
     useGetTasksByUserIdQuery,
+    useGetAuthUserQuery,
 } = api;

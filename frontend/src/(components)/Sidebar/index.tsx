@@ -2,7 +2,8 @@
 
 import { useAppDispatch, useAppSelector } from "@/app/redux"
 import { setIsSidebarCollapsed } from "@/state"
-import { Project, useGetProjectsQuery } from "@/state/api"
+import { Project, useGetAuthUserQuery, useGetProjectsQuery } from "@/state/api"
+import { signOut } from "aws-amplify/auth"
 import { AlertCircle, AlertOctagon, AlertTriangle, Briefcase, ChevronDown, ChevronUp, HomeIcon, Icon, Layers3, LockIcon, LucideHome, LucideIcon, Menu, Search, Settings, ShieldAlert, User, UsersIcon, X } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
@@ -23,7 +24,18 @@ export default function Sidebar() {
     const sidebarClassNames = `fixed flex flex-col h-[100%] justify-between shadow-xl
     transition-all duration-300 h-full z-40 dark:bg-black overflow-y-auto bg-white ${isSidebar ? "w-0 hidden" : 'w-64'}`
     const { data: projects } = useGetProjectsQuery()
+    const {data:currentUser} = useGetAuthUserQuery({});
+    const handleSignOut = async ()=>{
+        try{
+            await signOut()
 
+        }catch(e){
+            console.log('error sign in out ',e)
+        }
+    }
+    
+    if(!currentUser) return null;
+    const currentUserDetails = currentUser?.userDetails;
 
     return (
         <div className={sidebarClassNames}>
@@ -124,6 +136,28 @@ export default function Sidebar() {
                     )
                 }
 
+            </div>
+            <div className="z-10 mt-32 flex w-full flex-col items-center gap-4 bg-white px-8 py-4 dark:bg-black md:hidden">
+            <div className="flex w-full items-center ">
+                    <div className='align-center flex h-9 w-9 justify-center'>
+                        {!!currentUserDetails?.profilePictureUrl? (
+                             <Image
+                             src={`/${currentUserDetails.profilePictureUrl}}`}
+                             alt="error image"
+                             width={400}
+                             height={200}
+                             className='h-auto w-full rounded-full  object-cover'
+                         />
+                        ):(
+                            <User className='h-6 w-6 cursor-pointer self-center rounded-full dark:text-white' />
+                        )}
+
+                        <span className='mx-3 text-gray-800 dark:text-white' > 
+                            {currentUserDetails?.username}
+                        </span>
+                        <button onClick={handleSignOut} className='hidden rounded bg-blue-400 px-4 py-2 font-bold text-white hover:bg-blue-500 md:block'>signOut</button>
+                    </div>
+                </div>
             </div>
         </div>
     )

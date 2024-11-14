@@ -48,10 +48,10 @@ const PORT = Number(process.env.PORT) || 5000
 app.post('/users/create-user', async (req: Request, res: Response) => {
 
     try {
-        const { username, cognitoId, profilePictureUrl='i1.jpg',teamId = 1}  = req.body
+        const { username, cognitoId, profilePictureUrl = 'i1.jpg', teamId = 1 } = req.body
 
         const newUser = await prisma.user.create({
-            data:{
+            data: {
                 username,
                 cognitoId,
                 profilePictureUrl,
@@ -59,7 +59,7 @@ app.post('/users/create-user', async (req: Request, res: Response) => {
             }
         });
 
-        res.status(200).json({success:true,user:newUser})
+        res.status(200).json({ success: true, user: newUser })
     } catch (error: any) {
         res.status(500).json({ message: "error while retriving users", Error: error.message })
 
@@ -67,5 +67,7 @@ app.post('/users/create-user', async (req: Request, res: Response) => {
 
 
 })
+
+
 
 app.listen(PORT, '0.0.0.0')

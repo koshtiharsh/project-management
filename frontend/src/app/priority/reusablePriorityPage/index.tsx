@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react';
-import { Priority, Task, useGetTasksByUserIdQuery } from '../../../state/api';
+import { Priority, Task, useGetAuthUserQuery, useGetTasksByUserIdQuery } from '../../../state/api';
 import { useAppSelector } from '@/app/redux';
 import ModalNewTask from '@/(components)/ModalNewTask';
 import Header from '@/(components)/Header';
@@ -76,7 +76,9 @@ export default function ReusablePriorityPage({priority}: Props) {
     const [view,setView ] = useState('list')
     const [ isModalNewTaskOpen,setIsModalNewTaskOpen ] = useState(false)
     
-    const userId = 1
+    const {data:currentUser} = useGetAuthUserQuery({});
+    const userId = currentUser?.userDetails?.userId ?? null;
+    
 
     const { data:tasks, isLoading:isTaskLoading,isError:isTaskError  } = useGetTasksByUserIdQuery(userId || 0,{
         skip:userId==null
