@@ -112,9 +112,11 @@ export const api = createApi({
                     const { accessToken } = session.tokens ?? {};
 
                     // using that id go get data from db
-                    console.log(accessToken)
+                    
+                    console.log(userSub)
                     const userDetailsResponse = await fetchWithBQ(`users/${userSub}`)
-                    const userDetails = userDetailsResponse.data as User;
+                    const userDetails = userDetailsResponse.data as any;
+                    console.log('userdetal ',userDetails)
                     return { data: { user, userSub, userDetails } }
 
                 } catch (error: any) {

@@ -12,92 +12,92 @@ import { dataGridClassNames, dataGridSxStyles } from '@/app/lib/utils';
 
 type Props = {
 
-    priority:Priority
+  priority: Priority
 }
 
 const columns: GridColDef[] = [
-    {
-      field: "title",
-      headerName: "Title",
-      width: 100,
-    },
-    {
-      field: "description",
-      headerName: "Description",
-      width: 200,
-    },
-    {
-      field: "status",
-      headerName: "Status",
-      width: 130,
-      renderCell: (params) => (
-        <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
-          {params.value}
-        </span>
-      ),
-    },
-    {
-      field: "priority",
-      headerName: "Priority",
-      width: 75,
-    },
-    {
-      field: "tags",
-      headerName: "Tags",
-      width: 130,
-    },
-    {
-      field: "startDate",
-      headerName: "Start Date",
-      width: 130,
-    },
-    {
-      field: "dueDate",
-      headerName: "Due Date",
-      width: 130,
-    },
-    {
-      field: "author",
-      headerName: "Author",
-      width: 150,
-      renderCell: (params) => params.value.username || "Unknown",
-    },
-    {
-      field: "assignee",
-      headerName: "Assignee",
-      width: 150,
-      renderCell: (params) => params.value.username || "Unassigned",
-    },
-  ];
-  
-
-export default function ReusablePriorityPage({priority}: Props) {
-
-    const [view,setView ] = useState('list')
-    const [ isModalNewTaskOpen,setIsModalNewTaskOpen ] = useState(false)
-    
-    const {data:currentUser} = useGetAuthUserQuery({});
-    const userId = currentUser?.userDetails?.userId ?? null;
-    
-
-    const { data:tasks, isLoading:isTaskLoading,isError:isTaskError  } = useGetTasksByUserIdQuery(userId || 0,{
-        skip:userId==null
-    })
+  {
+    field: "title",
+    headerName: "Title",
+    width: 100,
+  },
+  {
+    field: "description",
+    headerName: "Description",
+    width: 200,
+  },
+  {
+    field: "status",
+    headerName: "Status",
+    width: 130,
+    renderCell: (params) => (
+      <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
+        {params.value}
+      </span>
+    ),
+  },
+  {
+    field: "priority",
+    headerName: "Priority",
+    width: 75,
+  },
+  {
+    field: "tags",
+    headerName: "Tags",
+    width: 130,
+  },
+  {
+    field: "startDate",
+    headerName: "Start Date",
+    width: 130,
+  },
+  {
+    field: "dueDate",
+    headerName: "Due Date",
+    width: 130,
+  },
+  {
+    field: "author",
+    headerName: "Author",
+    width: 150,
+    renderCell: (params) => params.value.username || "Unknown",
+  },
+  {
+    field: "assignee",
+    headerName: "Assignee",
+    width: 150,
+    renderCell: (params) => params.value.username || "Unassigned",
+  },
+];
 
 
+export default function ReusablePriorityPage({ priority }: Props) {
 
-    const isDarkMode = useAppSelector((state)=>state.global.isDarkMode)
+  const [view, setView] = useState('list')
+  const [isModalNewTaskOpen, setIsModalNewTaskOpen] = useState(false)
 
-    const filterdTasks = tasks?.filter((task:Task)=>task.priority ===priority)
+  const { data: currentUser } = useGetAuthUserQuery({});
+  const userId = currentUser?.userDetails?.data?.userId ?? null;
+
+  console.log(currentUser?.userDetails)
+  const { data: tasks, isLoading: isTaskLoading, isError: isTaskError } = useGetTasksByUserIdQuery(userId || 0, {
+    skip: userId == null
+  })
 
 
-    if(isTaskError || !tasks) return <div>Error while fething tasks</div>
-    
+
+  const isDarkMode = useAppSelector((state) => state.global.isDarkMode)
+
+  const filterdTasks = tasks?.filter((task: Task) => task.priority === priority)
+
+
+  if (isTaskError || !tasks) return <div>Error while fething tasks</div>
+
 
   return (
     <div className='m-5 p-4'>
-        <ModalNewTask isOpen={isModalNewTaskOpen} onClose={()=>setIsModalNewTaskOpen(false)}/>
-        <Header
+      <ModalNewTask isOpen={isModalNewTaskOpen} onClose={() => setIsModalNewTaskOpen(false)} />
+      <Header
         name="Priority Page"
         buttonComponent={
           <button
@@ -108,19 +108,17 @@ export default function ReusablePriorityPage({priority}: Props) {
           </button>
         }
       />
-           <div className="mb-4 flex justify-start">
+      <div className="mb-4 flex justify-start">
         <button
-          className={`px-4 py-2 ${
-            view === "list" ? "bg-gray-300" : "bg-white"
-          } rounded-l`}
+          className={`px-4 py-2 ${view === "list" ? "bg-gray-300" : "bg-white"
+            } rounded-l`}
           onClick={() => setView("list")}
         >
           List
         </button>
         <button
-          className={`px-4 py-2 ${
-            view === "table" ? "bg-gray-300" : "bg-white"
-          } rounded-l`}
+          className={`px-4 py-2 ${view === "table" ? "bg-gray-300" : "bg-white"
+            } rounded-l`}
           onClick={() => setView("table")}
         >
           Table
@@ -150,6 +148,6 @@ export default function ReusablePriorityPage({priority}: Props) {
         )
       )}
     </div>
-  
+
   )
 };

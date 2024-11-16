@@ -11,11 +11,6 @@ export const getUsers = async (
     try {
 
         const users = await prisma.user.findMany();
-
-
-
-
-
         res.status(200).json(users)
     } catch (error: any) {
         res.status(500).json({ message: "error while retriving users", Error: error.message })
@@ -40,12 +35,8 @@ export const getUser = async (
         });
 
         if (user) {
-            res.json(user)
+            res.json({ data: user })
         }
-
-
-
-
 
         // res.status(200).json(users)
     } catch (error: any) {
