@@ -1,5 +1,6 @@
 import { createApi, CreateApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth";
+import { String } from "lodash";
 
 export interface Project {
     id: number;
@@ -79,6 +80,14 @@ export interface Team {
     projectManagerUsername: string;
 }
 
+export interface Todo {
+    id: number,
+    cognitoId: string,
+    status: boolean,
+    name: string
+    deadline: string
+}
+
 export const api = createApi({
     baseQuery: fetchBaseQuery({
 
@@ -95,7 +104,7 @@ export const api = createApi({
         }
     }),
     reducerPath: 'api',
-    tagTypes: ['Projects', 'Tasks', 'Users', "Teams"],
+    tagTypes: ['Projects', 'Tasks', 'Users', "Teams",'Todos'],
     endpoints: (build) => ({
 
         getAuthUser: build.query({
@@ -112,11 +121,11 @@ export const api = createApi({
                     const { accessToken } = session.tokens ?? {};
 
                     // using that id go get data from db
-                    
+
                     console.log(userSub)
                     const userDetailsResponse = await fetchWithBQ(`users/${userSub}`)
                     const userDetails = userDetailsResponse.data as any;
-                    console.log('userdetal ',userDetails)
+                    console.log('userdetal ', userDetails)
                     return { data: { user, userSub, userDetails } }
 
                 } catch (error: any) {
@@ -194,8 +203,36 @@ export const api = createApi({
                     : [{ type: 'Tasks' }], // If no result, still provide the 'Tasks' tag
         }),
 
+        getTodosByCognitoId: build.query<Todo[], String>({
+            query:(cognitoId)=>`todolist/${cognitoId}`,
+            providesTags:['Todos']
+        })
 
+        ,
+        createNewTodo:build.mutation<Todo,Partial<Todo>>({
+            query:(todo)=>({
+                url:'/todolist/addnewtask',
+                method:'post',
+                body:todo
+            }),
+            invalidatesTags:['Todos']
+        }),
 
+        updateTodo: build.mutation<Todo, number>({
+            query: (id) => ({
+                url: `/todolist/updatetodo/${id}`, // ID is passed in the URL
+                method: 'GET', // Using GET for update (though it's not ideal)
+            }),
+            invalidatesTags:['Todos']
+        }),
+        deleteTodo: build.mutation<Object, number>({
+            query: (id) => ({
+                url: `/todolist/delete`, // ID is passed in the URL
+                method: 'POST',
+                body:{id:id}
+            }),
+            invalidatesTags:['Todos']
+        }),
     }),
 });
 
@@ -212,4 +249,8 @@ export const {
     useGetTeamsQuery,
     useGetTasksByUserIdQuery,
     useGetAuthUserQuery,
+    useGetTodosByCognitoIdQuery,
+    useCreateNewTodoMutation,
+    useUpdateTodoMutation,
+    useDeleteTodoMutation,
 } = api;

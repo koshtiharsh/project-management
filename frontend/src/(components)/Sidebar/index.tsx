@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "@/app/redux"
 import { setIsSidebarCollapsed } from "@/state"
 import { Project, useGetAuthUserQuery, useGetProjectsQuery } from "@/state/api"
 import { signOut } from "aws-amplify/auth"
-import { AlertCircle, AlertOctagon, AlertTriangle, Briefcase, ChevronDown, ChevronUp, HomeIcon, Icon, Layers3, LockIcon, LucideHome, LucideIcon, Menu, Search, Settings, ShieldAlert, User, UsersIcon, X } from "lucide-react"
+import { AlertCircle, AlertOctagon, AlertTriangle, Briefcase, ChevronDown, ChevronUp, HomeIcon, Icon, Layers3, ListTodo, LockIcon, LucideHome, LucideIcon, Menu, Search, Settings, ShieldAlert, User, UsersIcon, X } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import {  usePathname } from "next/navigation"
@@ -74,6 +74,7 @@ export default function Sidebar() {
                     <SidebarLink icon={Settings} label="Settings" href="/settings" />
                     <SidebarLink icon={User} label="Users" href="/users" />
                     <SidebarLink icon={UsersIcon} label="Teams" href="/teams" />
+                    <SidebarLink icon={ListTodo} label="ToDo-List" href="/todolist" />
                 </nav>
 
                 <button

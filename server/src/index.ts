@@ -16,6 +16,7 @@ import taskRoutes from "./routes/taskroutes"
 import search from './routes/serachRoutes'
 import usersRoutes from "./routes/userRoutes";
 import teamsRoutes from "./routes/teamRoutes";
+import todoRouter from "./routes/todoRoutes";
 // configs
 
 dotenv.config();
@@ -68,6 +69,8 @@ app.post('/users/create-user', async (req: Request, res: Response) => {
 
 })
 
+
+app.use('/todolist',todoRouter)
 
 
 app.listen(PORT, '0.0.0.0')

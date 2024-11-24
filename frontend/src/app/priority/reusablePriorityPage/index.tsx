@@ -77,7 +77,7 @@ export default function ReusablePriorityPage({ priority }: Props) {
   const [isModalNewTaskOpen, setIsModalNewTaskOpen] = useState(false)
 
   const { data: currentUser } = useGetAuthUserQuery({});
-  const userId = currentUser?.userDetails?.data?.userId ?? null;
+  const userId = currentUser?.userDetails?.data[0]?.userId ?? null;
 
   console.log(currentUser?.userDetails)
   const { data: tasks, isLoading: isTaskLoading, isError: isTaskError } = useGetTasksByUserIdQuery(userId || 0, {
@@ -86,10 +86,12 @@ export default function ReusablePriorityPage({ priority }: Props) {
 
 
 
+
   const isDarkMode = useAppSelector((state) => state.global.isDarkMode)
 
   const filterdTasks = tasks?.filter((task: Task) => task.priority === priority)
 
+  console.log('userid by aws', userId)
 
   if (isTaskError || !tasks) return <div>Error while fething tasks</div>
 
