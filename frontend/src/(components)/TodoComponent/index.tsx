@@ -59,7 +59,7 @@ export default function TodoComponent({ name, deadline, status, id }: Props) {
          </div>
         </div>
       </div>}
-      <div className="shadow-md rounded-lg  w-[350px]  min-h-[50px]  flex mt-2 relative">
+      <div className="shadow-md rounded-lg md:w-[350px]   w-[90%]  min-h-[50px]  flex mt-2 relative">
 
 
         <div className="w-[5px] bg-[#2563EB] min-h-[70px] rounded-l-lg">

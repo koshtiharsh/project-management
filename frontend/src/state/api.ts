@@ -92,7 +92,7 @@ export const api = createApi({
     baseQuery: fetchBaseQuery({
 
         baseUrl: process.env.NEXT_PUBLIC_API_URL,
-
+        credentials: 'include',
         prepareHeaders: async (headers) => {
             const session = await fetchAuthSession()
             const { accessToken } = session.tokens ?? {}
@@ -104,7 +104,7 @@ export const api = createApi({
         }
     }),
     reducerPath: 'api',
-    tagTypes: ['Projects', 'Tasks', 'Users', "Teams",'Todos'],
+    tagTypes: ['Projects', 'Tasks', 'Users', "Teams", 'Todos'],
     endpoints: (build) => ({
 
         getAuthUser: build.query({
@@ -123,6 +123,8 @@ export const api = createApi({
                     // using that id go get data from db
 
                     console.log(userSub)
+                    document.cookie = `Auth=${userSub}; path=/`;
+
                     const userDetailsResponse = await fetchWithBQ(`users/${userSub}`)
                     const userDetails = userDetailsResponse.data as any;
                     console.log('userdetal ', userDetails)
@@ -163,6 +165,7 @@ export const api = createApi({
                 url: 'tasks',
                 method: 'POST',
                 body: task,
+
             }),
             invalidatesTags: ['Tasks'], // Automatically refreshes the projects list
         }),
@@ -204,18 +207,18 @@ export const api = createApi({
         }),
 
         getTodosByCognitoId: build.query<Todo[], String>({
-            query:(cognitoId)=>`todolist/${cognitoId}`,
-            providesTags:['Todos']
+            query: (cognitoId) => `todolist/${cognitoId}`,
+            providesTags: ['Todos']
         })
 
         ,
-        createNewTodo:build.mutation<Todo,Partial<Todo>>({
-            query:(todo)=>({
-                url:'/todolist/addnewtask',
-                method:'post',
-                body:todo
+        createNewTodo: build.mutation<Todo, Partial<Todo>>({
+            query: (todo) => ({
+                url: '/todolist/addnewtask',
+                method: 'post',
+                body: todo
             }),
-            invalidatesTags:['Todos']
+            invalidatesTags: ['Todos']
         }),
 
         updateTodo: build.mutation<Todo, number>({
@@ -223,15 +226,15 @@ export const api = createApi({
                 url: `/todolist/updatetodo/${id}`, // ID is passed in the URL
                 method: 'GET', // Using GET for update (though it's not ideal)
             }),
-            invalidatesTags:['Todos']
+            invalidatesTags: ['Todos']
         }),
         deleteTodo: build.mutation<Object, number>({
             query: (id) => ({
                 url: `/todolist/delete`, // ID is passed in the URL
                 method: 'POST',
-                body:{id:id}
+                body: { id: id }
             }),
-            invalidatesTags:['Todos']
+            invalidatesTags: ['Todos']
         }),
     }),
 });

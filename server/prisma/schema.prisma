@@ -14,18 +14,18 @@ datasource db {
 }
 
 model User {
-  userId            Int     @id @default(autoincrement())
-  cognitoId         String  @unique
-  username          String  @unique
+  userId            Int              @id @default(autoincrement())
+  cognitoId         String           @unique
+  username          String           @unique
   profilePictureUrl String?
   teamId            Int?
-
-  authoredTasks   Task[]           @relation("TaskAuthor")
-  assignedTasks   Task[]           @relation("TaskAssignee")
-  taskAssignments TaskAssignment[]
-  attachments     Attachment[]
-  comments        Comment[]
-  team            Team?            @relation(fields: [teamId], references: [id])
+  subscription      Json[]           @default([])
+  authoredTasks     Task[]           @relation("TaskAuthor")
+  assignedTasks     Task[]           @relation("TaskAssignee")
+  taskAssignments   TaskAssignment[]
+  attachments       Attachment[]
+  comments          Comment[]
+  team              Team?            @relation(fields: [teamId], references: [id])
 }
 
 model Team {
