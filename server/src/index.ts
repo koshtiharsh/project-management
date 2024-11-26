@@ -7,6 +7,7 @@ import morgan from 'morgan'
 import { PrismaClient } from "@prisma/client";
 const webpush = require('web-push')
 const cookieParser = require('cookie-parser');
+const moment = require('moment-timezone')
 
 
 // router import
@@ -158,12 +159,16 @@ app.post('/todolist/addnewtask', async (
 
         if (newTask) {
 
+            /// convertirng users timezone to UTC
+            const finalDeadline = moment(`${deadline}+05:30`).utc().toDate()
+
+
             const date = new Date(deadline)
 
             const hours = date.getHours()
             const minutes = date.getMinutes()
-
-            schedule.scheduleJob(new Date(deadline), () => {
+            console.log(finalDeadline)
+            schedule.scheduleJob(new Date(finalDeadline), () => {
                 user?.subscription.forEach(async (item) => {
                     const payload = JSON.stringify({
                         title: "Task Notification",
