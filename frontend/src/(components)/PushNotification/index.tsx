@@ -15,7 +15,7 @@ export default function PushNotification() {
 
     async function register() {
 
-    
+
 
 
       if ('serviceWorker' in navigator) {

@@ -19,7 +19,6 @@ import usersRoutes from "./routes/userRoutes";
 import teamsRoutes from "./routes/teamRoutes";
 import todoRouter from "./routes/todoRoutes";
 import schedule from 'node-schedule'
-import { any } from "zod";
 
 // configs
 
