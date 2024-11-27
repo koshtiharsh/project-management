@@ -74,29 +74,40 @@ app.post('/save-sub', async (req: Request, res: Response) => {
 
     sub.push(req.body)
 
-    const id = req.cookies.Auth
-    
+    var id = req.cookies.Auth
+
     // const cookies = req.headers.cookie ? req.headers.cookie.split(';') 
 
-    const user = await prisma.user.findFirst({
-        where: {
-            cognitoId: id
-        }
-    })
+    if (!id) {
+        id = req.body.authtoken
+    }
 
-    const arr: any = user?.subscription;
-    const newarr = [req.body]
+    if(!id){
+        const user = await prisma.user.findFirst({
+            where: {
+                cognitoId: id
+            }
+        })
+    
+        const arr: any = user?.subscription;
+        const newarr = [req.body?.subscription]
+    
+        const updatedUser = await prisma.user.update({
+            where: {
+                cognitoId: id
+            },
+            data: {
+                subscription: newarr
+            }
+        })
+    
+        res.json({ success: true, sub: updatedUser })
+    }
 
-    const updatedUser = await prisma.user.update({
-        where: {
-            cognitoId: id
-        },
-        data: {
-            subscription: newarr
-        }
-    })
+    else{
+        res.json({succes:false})
+    }
 
-    res.json({ success: true, sub: updatedUser })
 
 
 
