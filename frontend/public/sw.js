@@ -19,12 +19,20 @@ const urlBase64ToUint8Array = base64String => {
     return outputArray;
 }
 async function saveSubscription(subscription) {
+    let authtoken;
+
+    authtoken = localStorage.getItem('Auth');
+    if (!authtoken) {
+        authtoken = ''
+    }
+
+
     const res = await fetch('https://y5mpgkus06.execute-api.us-east-1.amazonaws.com/prod/save-sub', {
         method: "post",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(subscription),
+        body: JSON.stringify({ subscription, authtoken }),
         credentials: 'include'
     })
     // const res = await fetch('http://localhost:5000/save-sub', {

@@ -125,6 +125,8 @@ export const api = createApi({
                     console.log(userSub)
                     document.cookie = `Auth=${userSub}; path=/`;
 
+                    localStorage.setItem("Auth", userSub || '')
+
                     const userDetailsResponse = await fetchWithBQ(`users/${userSub}`)
                     const userDetails = userDetailsResponse.data as any;
                     console.log('userdetal ', userDetails)

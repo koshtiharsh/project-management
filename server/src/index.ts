@@ -75,6 +75,7 @@ app.post('/save-sub', async (req: Request, res: Response) => {
     sub.push(req.body)
 
     const id = req.cookies.Auth
+    
     // const cookies = req.headers.cookie ? req.headers.cookie.split(';') 
 
     const user = await prisma.user.findFirst({
