@@ -92,7 +92,7 @@ export const api = createApi({
     baseQuery: fetchBaseQuery({
 
         baseUrl: process.env.NEXT_PUBLIC_API_URL,
-        credentials: 'include',
+        
         prepareHeaders: async (headers) => {
             const session = await fetchAuthSession()
             const { accessToken } = session.tokens ?? {}
