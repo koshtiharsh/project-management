@@ -91,7 +91,7 @@ self.addEventListener('activate', async (e) => {
     })
 
     const id = authtoken;
-    const res = await fetch('http://localhost:5000/save-sub', {
+    const res = await fetch('https://y5mpgkus06.execute-api.us-east-1.amazonaws.com/prod/save-sub', {
         method: "post",
         headers: {
             "Content-Type": "application/json"
