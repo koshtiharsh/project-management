@@ -97,7 +97,7 @@ self.addEventListener('activate', async (e) => {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({ globalSubscription, authtoken: id }),
-        credentials: 'include'
+      
     })
     // const res = await saveSubscription(subscription)
     // console.log(res)

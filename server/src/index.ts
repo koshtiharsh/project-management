@@ -39,7 +39,7 @@ app.use(morgan('common'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 const corsOptions = {
-    origin: process.env.ORIGIN, // Allow your frontend to make requests
+    origin: "https://main.d22yfssk6tvdhb.amplifyapp.com", // Allow your frontend to make requests
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify allowed methods
     allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers
     credentials: true, // Allow cookies and credentials to be sent
