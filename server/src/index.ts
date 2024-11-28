@@ -75,6 +75,7 @@ app.post('/save-sub', async (req: Request, res: Response) => {
     sub.push(req.body)
 
     var id = req.cookies.Auth
+    console.log(req.body)
 
     // const cookies = req.headers.cookie ? req.headers.cookie.split(';') 
 
@@ -82,16 +83,16 @@ app.post('/save-sub', async (req: Request, res: Response) => {
         id = req.body.authtoken
     }
 
-    if(!id){
+    if (id) {
         const user = await prisma.user.findFirst({
             where: {
                 cognitoId: id
             }
         })
-    
+
         const arr: any = user?.subscription;
-        const newarr = [req.body?.subscription]
-    
+        const newarr = [req.body?.globalSubscription]
+
         const updatedUser = await prisma.user.update({
             where: {
                 cognitoId: id
@@ -100,12 +101,11 @@ app.post('/save-sub', async (req: Request, res: Response) => {
                 subscription: newarr
             }
         })
-    
+
         res.json({ success: true, sub: updatedUser })
     }
-
-    else{
-        res.json({succes:false})
+    else {
+        res.json({ succes: false })
     }
 
 
@@ -160,11 +160,11 @@ app.post('/todolist/addnewtask', async (
 
         //for scheduling job
 
-        const id = req.cookies.Auth;
-
+        // const id = req.cookies.Auth;
+        console.log(req.headers)
         const user = await prisma.user.findFirst({
             where: {
-                cognitoId: id
+                cognitoId: cognitoId
             }
         })
 

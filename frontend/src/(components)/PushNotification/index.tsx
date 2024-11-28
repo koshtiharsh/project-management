@@ -8,30 +8,33 @@ import { useEffect } from "react"
 
 export default function PushNotification() {
 
-
-
   useEffect(() => {
+    async function registerServiceWorker() {
+      try {
+        if ('serviceWorker' in navigator) {
+          const permission = await Notification.requestPermission();
 
+          if (permission === 'granted') {
+            const reg = await navigator.serviceWorker.register('/sw.js');
 
-    async function register() {
+            // Wait for the service worker to be ready
+            const registration = await navigator.serviceWorker.ready;
 
-
-      console.log('check 1')
-
-      if ('serviceWorker' in navigator) {
-        console.log('check 2')
-        const permission = await Notification.requestPermission();
-
-        if (permission == 'granted') {
-          const reg = await navigator.serviceWorker.register("/sw.js")
-          return reg;
+            const authtoken = localStorage.getItem('Auth');
+            if (authtoken) {
+              // Send message using the controller
+              registration.active?.postMessage({ authtoken });
+              console.log('Auth token sent to service worker');
+            }
+          }
         }
+      } catch (error) {
+        console.error('Service worker registration failed:', error);
       }
     }
 
-    register();
-
-  }, [])
+    registerServiceWorker();
+  }, []);
   return (
     <div>
 

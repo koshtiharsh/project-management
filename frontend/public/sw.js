@@ -18,44 +18,89 @@ const urlBase64ToUint8Array = base64String => {
 
     return outputArray;
 }
-async function saveSubscription(subscription) {
-    let authtoken;
+// async function saveSubscription(subscription) {
+//     let authtoken;
 
-    authtoken = localStorage.getItem('Auth');
-    if (!authtoken) {
-        authtoken = ''
+//     authtoken = localStorage.getItem('Auth');
+//     if (!authtoken) {
+//         authtoken = ''
+//     }
+
+
+//     const res = await fetch('https://y5mpgkus06.execute-api.us-east-1.amazonaws.com/prod/save-sub', {
+//         method: "post",
+//         headers: {
+//             "Content-Type": "application/json"
+//         },
+//         body: JSON.stringify({ subscription, authtoken }),
+//         credentials: 'include'
+//     })
+//     // const res = await fetch('http://localhost:5000/save-sub', {
+//     //     method: "post",
+//     //     headers: {
+//     //         "Content-Type": "application/json"
+//     //     },
+//     //     body: JSON.stringify(subscription),
+//     //     credentials: 'include'
+//     // })
+
+//     return res.json();
+// }
+
+let globalSubscription = null;
+
+let authtoken = null
+// In sw.js
+self.addEventListener('message', async (event) => {
+    console.log('Received message in service worker:', event.data);
+
+    // Handle the auth token
+    if (event.data.authtoken) {
+        authtoken = event.data.authtoken;
     }
+});
+
+// self.addEventListener('message', (event) => {
+//     if (event.data && event.data.authtoken) {
+//         console.log('Auth token received:', event.data.authtoken);
+
+//         const id = event.data.authtoken;
+
+//         // Use the token as needed
+
+//         // const res = await fetch('http://localhost:5000/save-sub', {
+//         //     method: "post",
+//         //     headers: {
+//         //         "Content-Type": "application/json"
+//         //     },
+//         //     body: JSON.stringify(subscription),
+//         //     credentials: 'include'
+//         // })
 
 
-    const res = await fetch('https://y5mpgkus06.execute-api.us-east-1.amazonaws.com/prod/save-sub', {
-        method: "post",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ subscription, authtoken }),
-        credentials: 'include'
-    })
-    // const res = await fetch('http://localhost:5000/save-sub', {
-    //     method: "post",
-    //     headers: {
-    //         "Content-Type": "application/json"
-    //     },
-    //     body: JSON.stringify(subscription),
-    //     credentials: 'include'
-    // })
+//     }
+// });
 
-    return res.json();
-}
 
 self.addEventListener('activate', async (e) => {
     //this will work in firefox without having key of server but not in chrome
-    const subscription = await self.registration.pushManager.subscribe({
+    globalSubscription = await self.registration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array("BPx0jnRp630WXTuvJOKiPPRpyZxl8p2XPFkKOCg4MiBUl9_LItrEXiLbmYSs1DOWBbal3k6SWczctiemg8dW62k")
 
     })
-    const res = await saveSubscription(subscription)
-    console.log(res)
+
+    const id = authtoken;
+    const res = await fetch('http://localhost:5000/save-sub', {
+        method: "post",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ globalSubscription, authtoken: id }),
+        credentials: 'include'
+    })
+    // const res = await saveSubscription(subscription)
+    // console.log(res)
 
 
 
